@@ -42,3 +42,22 @@ export async function awardXp(
     meta: meta ?? null,
   });
 }
+
+/** Award the streak bonus exactly once per day, on the 5th completed review. */
+export async function maybeAwardStreakBonus(
+  supabase: SupabaseClient,
+  userId: string
+) {
+  const dayStart = new Date();
+  dayStart.setUTCHours(0, 0, 0, 0);
+  const { count } = await supabase
+    .from("review_log")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .gte("answered_at", dayStart.toISOString());
+  if (count === 5) {
+    await awardXp(supabase, userId, "streak", XP.streakBonus, {
+      day: dayStart.toISOString().slice(0, 10),
+    });
+  }
+}

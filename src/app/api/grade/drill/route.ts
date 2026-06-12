@@ -4,7 +4,7 @@ import { applyRating } from "@/modules/dojo/lib/fsrs";
 import { loadPlaybook } from "@/modules/dojo/lib/playbook";
 import { drillGraderPrompt } from "@/modules/dojo/lib/prompts";
 import { drillGradeSchema } from "@/modules/dojo/lib/schemas";
-import { XP, awardXp } from "@/modules/dojo/lib/xp";
+import { XP, awardXp, maybeAwardStreakBonus } from "@/modules/dojo/lib/xp";
 
 export const runtime = "nodejs";
 
@@ -76,6 +76,7 @@ export async function POST(req: Request) {
   await awardXp(supabase, user.id, "drill", XP.drill(grade.fsrs_rating), {
     drill_id: drillId,
   });
+  await maybeAwardStreakBonus(supabase, user.id);
 
   return Response.json({ ...grade, next_due: next.due });
 }

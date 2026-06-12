@@ -95,6 +95,15 @@ export async function POST(req: Request) {
     })
     .eq("id", contact.id);
 
+  // De-identified social-proof stories feed the case-story library.
+  if (debrief.case_story) {
+    await supabase.from("case_stories").insert({
+      user_id: user.id,
+      ...debrief.case_story,
+      deidentified: true,
+    });
+  }
+
   if (debrief.outcome === "advance") {
     await awardXp(supabase, user.id, "field_advance", XP.advanceSecured, {
       meeting_id: meetingId,

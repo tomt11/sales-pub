@@ -8,8 +8,12 @@ export type Msg = { role: "user" | "assistant"; content: string };
  * Minimal streaming chat state against a plain-text streaming endpoint.
  * send() posts {…body, messages} and appends the streamed assistant reply.
  */
-export function useStreamChat(endpoint: string, body: Record<string, unknown> = {}) {
-  const [messages, setMessages] = useState<Msg[]>([]);
+export function useStreamChat(
+  endpoint: string,
+  body: Record<string, unknown> = {},
+  initial: Msg[] = []
+) {
+  const [messages, setMessages] = useState<Msg[]>(initial);
   const [streaming, setStreaming] = useState(false);
   const bodyRef = useRef(body);
   bodyRef.current = body;

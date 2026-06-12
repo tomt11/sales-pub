@@ -7,6 +7,7 @@ import {
   xpThisWeek,
 } from "@/modules/dojo/lib/stats";
 import { rankFor } from "@/modules/dojo/lib/xp";
+import { weeklyNapTask } from "@/modules/dojo/lib/nap";
 import { Badge, Card } from "@/modules/dojo/components/ui";
 import { BlueFlame } from "@/modules/dojo/components/BlueFlame";
 import { Radar } from "@/modules/dojo/components/Radar";
@@ -33,6 +34,7 @@ export default async function Dashboard() {
     weekXp,
     total,
     { data: capstone },
+    { data: napCycle },
   ] = await Promise.all([
     supabase
       .from("reviews")
@@ -76,7 +78,16 @@ export default async function Dashboard() {
       .eq("sessions.book", "capstone")
       .limit(1)
       .maybeSingle(),
+    supabase
+      .from("nap_goals")
+      .select("actions, cycle_start")
+      .eq("user_id", user.id)
+      .eq("horizon", "90d")
+      .limit(1)
+      .maybeSingle(),
   ]);
+
+  const napTask = weeklyNapTask(napCycle);
 
   const oneThing = (lastRoleplay?.grade as { one_thing?: string } | null)?.one_thing;
   const rank = rankFor(total, !!capstone);
@@ -144,8 +155,12 @@ export default async function Dashboard() {
             </li>
           )}
           <li>
-            <Link href="/nap" className="flex items-center justify-between rounded-lg bg-ink-800 px-3 py-2.5 hover:bg-ink-700">
-              <span>Networking Action Plan</span>
+            <Link href="/nap" className="flex items-center justify-between gap-2 rounded-lg bg-ink-800 px-3 py-2.5 hover:bg-ink-700">
+              <span className="min-w-0 truncate">
+                {napTask
+                  ? `NAP week ${napTask.week}: ${napTask.task}`
+                  : "Networking Action Plan"}
+              </span>
               <Badge>NAP</Badge>
             </Link>
           </li>

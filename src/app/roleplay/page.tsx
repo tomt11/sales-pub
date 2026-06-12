@@ -44,6 +44,11 @@ export default async function RoleplayPage() {
       <PageTitle
         title="Roleplay simulator"
         subtitle="Deliberate practice with a realistic counterpart — graded on END"
+        action={
+          <Link href="/roleplay/history" className="text-xs text-flame-400 hover:underline">
+            History
+          </Link>
+        }
       />
       <div className="space-y-2">
         {sorted.map((p) => {

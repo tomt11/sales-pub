@@ -5,6 +5,12 @@ import { Nav } from "@/modules/dojo/components/Nav";
 export const metadata: Metadata = {
   title: "Origination Dojo",
   description: "Sales & relationship mastery training for agri-finance origination",
+  appleWebApp: {
+    capable: true,
+    title: "Dojo",
+    statusBarStyle: "black-translucent",
+  },
+  icons: { apple: "/apple-touch-icon.png" },
 };
 
 export const viewport: Viewport = {

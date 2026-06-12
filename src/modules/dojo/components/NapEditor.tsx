@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Badge, Button, Card, Input, PageTitle, Textarea } from "./ui";
 import { supabaseBrowser } from "../lib/supabase/client";
+import { weeklyNapTask } from "../lib/nap";
 
 type NapGoal = {
   id?: string;
@@ -68,20 +69,7 @@ export function NapEditor({ initialGoals }: { initialGoals: NapGoal[] }) {
     setSavedAt(Date.now());
   }
 
-  // Weekly task: rotate through the 90d actions by ISO week.
-  const cycle = goals["90d"];
-  const weekIndex = cycle.cycle_start
-    ? Math.max(
-        0,
-        Math.floor(
-          (Date.now() - new Date(cycle.cycle_start).getTime()) / (7 * 86400000)
-        )
-      )
-    : 0;
-  const weeklyTask =
-    cycle.actions.length > 0
-      ? cycle.actions[weekIndex % cycle.actions.length]
-      : null;
+  const napTask = weeklyNapTask(goals["90d"]);
 
   return (
     <div>
@@ -95,12 +83,12 @@ export function NapEditor({ initialGoals }: { initialGoals: NapGoal[] }) {
         }
       />
 
-      {weeklyTask && (
+      {napTask && (
         <Card className="mb-3 border-flame-500/40">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-flame-400">
-            This week (cycle week {weekIndex + 1})
+            This week (cycle week {napTask.week})
           </p>
-          <p className="mt-1 text-sm text-slate-200">{weeklyTask}</p>
+          <p className="mt-1 text-sm text-slate-200">{napTask.task}</p>
         </Card>
       )}
 

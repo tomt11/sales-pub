@@ -14,7 +14,8 @@ export async function POST(req: Request) {
 
   const { messages } = (await req.json()) as { messages: ChatMessage[] };
 
-  const [{ count: dueCount }, weak, { data: lastRoleplay }] = await Promise.all([
+  const [{ count: dueCount }, weak, { data: lastRoleplay }, { data: contacts }] =
+    await Promise.all([
     supabase
       .from("reviews")
       .select("id", { count: "exact", head: true })
@@ -29,10 +30,31 @@ export async function POST(req: Request) {
       .order("ended_at", { ascending: false })
       .limit(1)
       .maybeSingle(),
+    supabase
+      .from("contacts")
+      .select("name, firm, glue, cadence_days, last_touch, personal_notes")
+      .eq("user_id", user.id),
   ]);
 
   const oneThing =
     (lastRoleplay?.grade as { one_thing?: string } | null)?.one_thing ?? null;
+
+  const overdueContacts = (contacts ?? [])
+    .map((c) => {
+      const elapsed = c.last_touch
+        ? Math.floor((Date.now() - new Date(c.last_touch).getTime()) / 86400000)
+        : 9999;
+      return { ...c, overdue: elapsed - c.cadence_days };
+    })
+    .filter((c) => c.overdue > 0)
+    .sort((a, b) => b.overdue - a.overdue)
+    .slice(0, 5)
+    .map(
+      (c) =>
+        `${c.name}${c.firm ? ` (${c.firm})` : ""} — ${
+          c.overdue >= 9000 ? "never touched" : `${c.overdue}d overdue`
+        }${c.glue ? `, glue: ${c.glue}` : ""}`
+    );
 
   return streamText({
     model: MODEL_DIALOGUE,
@@ -41,6 +63,7 @@ export async function POST(req: Request) {
       dueCount: dueCount ?? 0,
       weakConcepts: weak,
       oneThing,
+      overdueContacts,
     }),
     messages,
     maxTokens: 400,

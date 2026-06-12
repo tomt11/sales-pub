@@ -11,8 +11,40 @@ import { cn } from "../lib/utils";
 
 type QuizItem = {
   reviewId: string;
-  drill: { id: string; prompt: string; type: string; concept_id: string };
+  drill: {
+    id: string;
+    prompt: string;
+    type: string;
+    concept_id: string;
+    options: string[] | null;
+    answer: number | null;
+    explain: string | null;
+  };
 };
+
+const LETTERS = ["A", "B", "C", "D", "E", "F"];
+
+/** Match a spoken answer to an option: letter first, then best word overlap. */
+function matchChoice(transcript: string, options: string[]): number | null {
+  const t = transcript.toLowerCase().trim();
+  const letterMatch = t.match(/\b(?:option\s+)?([a-f])\b/);
+  if (letterMatch) {
+    const idx = LETTERS.indexOf(letterMatch[1].toUpperCase());
+    if (idx >= 0 && idx < options.length) return idx;
+  }
+  const words = new Set(t.split(/\W+/).filter((w) => w.length > 3));
+  let best = -1;
+  let bestScore = 0;
+  options.forEach((opt, i) => {
+    const optWords = opt.toLowerCase().split(/\W+/).filter((w) => w.length > 3);
+    const score = optWords.filter((w) => words.has(w)).length;
+    if (score > bestScore) {
+      bestScore = score;
+      best = i;
+    }
+  });
+  return bestScore >= 2 || (bestScore === 1 && words.size <= 4) ? best : null;
+}
 
 /**
  * Voice AI coach. Two modes:
@@ -80,16 +112,13 @@ export function VoiceCoach() {
     if (!user) return;
     const { data } = await supabase
       .from("reviews")
-      .select("id, drills(id, prompt, type, concept_id)")
+      .select("id, drills(id, prompt, type, concept_id, options, answer, explain)")
       .eq("user_id", user.id)
       .lte("due", new Date().toISOString())
       .order("due", { ascending: true })
       .limit(30);
     const queue: QuizItem[] = (data ?? [])
-      .filter((r) => {
-        const d = r.drills as unknown as { type: string } | null;
-        return d && ["produce", "rewrite", "plan"].includes(d.type);
-      })
+      .filter((r) => r.drills)
       .map((r) => ({
         reviewId: r.id as string,
         drill: r.drills as unknown as QuizItem["drill"],
@@ -98,7 +127,8 @@ export function VoiceCoach() {
     setQuizQueue(queue);
     setQuizIndex(0);
     if (!queue.length) {
-      const msg = "No spoken-answer drills due right now. Switch to coach mode, or generate fresh drills on the drill screen.";
+      const msg =
+        "No drills due right now. Switch to coach mode, or generate fresh drills on the drill screen.";
       setQuizStatus(msg);
       speak(msg);
       return;
@@ -115,14 +145,61 @@ export function VoiceCoach() {
       return;
     }
     setLastFeedback("");
-    setQuizStatus(`Drill ${index + 1} of ${queue.length}: ${item.drill.prompt}`);
-    speak(`Drill ${index + 1}. ${item.drill.prompt}`, maybeListen);
+    const isChoice = !!item.drill.options?.length;
+    const optionsSpoken = isChoice
+      ? " " +
+        item.drill.options!
+          .map((o, i) => `Option ${LETTERS[i]}: ${o}.`)
+          .join(" ") +
+        " Say the letter or the answer."
+      : "";
+    setQuizStatus(
+      `Drill ${index + 1} of ${queue.length}: ${item.drill.prompt}` +
+        (isChoice
+          ? "\n" + item.drill.options!.map((o, i) => `${LETTERS[i]}) ${o}`).join("\n")
+          : "")
+    );
+    speak(`Drill ${index + 1}. ${item.drill.prompt}${optionsSpoken}`, maybeListen);
+  }
+
+  function advanceQuiz() {
+    const { queue, index } = quizRef.current;
+    const next = index + 1;
+    setQuizIndex(next);
+    askCurrent(queue, next);
   }
 
   async function answerQuiz(transcript: string) {
     const { queue, index } = quizRef.current;
     const item = queue[index];
     if (!item) return;
+
+    // Multiple-choice drills: match the spoken letter/answer, instant verdict.
+    if (item.drill.options?.length) {
+      const choice = matchChoice(transcript, item.drill.options);
+      if (choice === null) {
+        const msg = "I didn't catch which option — say the letter, like 'option B'.";
+        setQuizStatus(msg);
+        speak(msg, maybeListen);
+        return;
+      }
+      const correct = choice === item.drill.answer;
+      setQuizStatus("Marking…");
+      await fetch("/api/drill/answer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reviewId: item.reviewId,
+          rating: correct ? "good" : "again",
+          answerText: item.drill.options[choice],
+        }),
+      }).catch(() => {});
+      const fb = `${correct ? "Correct." : `Not quite — the answer was ${LETTERS[item.drill.answer ?? 0]}.`} ${item.drill.explain ?? ""}`;
+      setLastFeedback(fb);
+      speak(fb, advanceQuiz);
+      return;
+    }
+
     setQuizStatus("Grading…");
     try {
       const res = await fetch("/api/grade/drill", {
@@ -138,11 +215,7 @@ export function VoiceCoach() {
       const grade = await res.json();
       const fb = `Score ${grade.score} out of 4. ${grade.feedback}`;
       setLastFeedback(fb);
-      speak(fb, () => {
-        const next = index + 1;
-        setQuizIndex(next);
-        askCurrent(queue, next);
-      });
+      speak(fb, advanceQuiz);
     } catch {
       const msg = "Grading hit a snag — say your answer again.";
       setQuizStatus(msg);

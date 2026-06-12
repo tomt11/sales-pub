@@ -1,6 +1,6 @@
 import { supabaseServer } from "@/modules/dojo/lib/supabase/server";
 import { applyRating, type FsrsRating } from "@/modules/dojo/lib/fsrs";
-import { XP, awardXp } from "@/modules/dojo/lib/xp";
+import { XP, awardXp, maybeAwardStreakBonus } from "@/modules/dojo/lib/xp";
 
 export const runtime = "nodejs";
 
@@ -50,6 +50,7 @@ export async function POST(req: Request) {
   });
 
   await awardXp(supabase, user.id, "drill", XP.drill(rating));
+  await maybeAwardStreakBonus(supabase, user.id);
 
   return Response.json({ ok: true, next_due: next.due });
 }

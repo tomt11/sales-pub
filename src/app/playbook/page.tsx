@@ -11,6 +11,19 @@ export default function PlaybookIndex() {
         subtitle="The seven source frameworks, distilled for agri origination"
       />
       <div className="space-y-2">
+        <Link href="/stories" className="block">
+          <Card className="border-gold/30 transition-colors hover:border-gold/60">
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-sm font-semibold text-slate-100">
+                Case-story library
+              </p>
+              <Badge tone="gold">social proof</Badge>
+            </div>
+            <p className="mt-1 text-xs text-slate-500">
+              De-identified stories matched by region, commodity and scale
+            </p>
+          </Card>
+        </Link>
         {playbooks.map(({ book, content }) => {
           const title = content.split("\n")[0].replace(/^#\s*/, "");
           const conceptCount = (content.match(/DRILLABLE CONCEPT LIST/)

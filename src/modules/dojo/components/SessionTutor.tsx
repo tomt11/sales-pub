@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Badge, Button, PageTitle } from "./ui";
 import { ChatInput } from "./ChatInput";
-import { useStreamChat } from "../hooks/useStreamChat";
+import { useStreamChat, type Msg } from "../hooks/useStreamChat";
+import { supabaseBrowser } from "../lib/supabase/client";
 import { cn } from "../lib/utils";
 
 const PHASES = ["ACTIVATE", "TEACH", "TEACHBACK", "APPLY", "CLOSE"] as const;
@@ -20,21 +21,29 @@ export function SessionTutor({
   sessionId,
   title,
   concepts,
+  initialMessages = [],
+  progressStatus = "available",
 }: {
   sessionId: number;
   title: string;
   concepts: string[];
+  initialMessages?: Msg[];
+  progressStatus?: string;
 }) {
   const router = useRouter();
-  const { messages, send, streaming } = useStreamChat("/api/tutor", { sessionId });
+  const { messages, send, streaming } = useStreamChat(
+    "/api/tutor",
+    { sessionId },
+    initialMessages
+  );
   const [completing, setCompleting] = useState(false);
   const started = useRef(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!started.current) {
+    if (!started.current && initialMessages.length === 0) {
       started.current = true;
-      send("I'm ready to start the session.");
+      send("I'm ready to start the session.", (_reply, all) => saveTranscript(all));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -42,6 +51,25 @@ export function SessionTutor({
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Autosave the transcript after each completed turn so an interrupted
+  // session resumes where it left off.
+  async function saveTranscript(all: Msg[]) {
+    const supabase = supabaseBrowser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+    await supabase.from("session_progress").upsert(
+      {
+        user_id: user.id,
+        session_id: sessionId,
+        status: progressStatus === "done" ? "done" : "in_progress",
+        transcript: all,
+      },
+      { onConflict: "user_id,session_id" }
+    );
+  }
 
   const transcript = messages.map((m) => m.content).join("\n");
   const currentPhase = [...PHASES].reverse().find((p) =>
@@ -118,7 +146,10 @@ export function SessionTutor({
         <div ref={bottomRef} />
       </div>
 
-      <ChatInput onSend={(t) => send(t)} disabled={streaming} />
+      <ChatInput
+        onSend={(t) => send(t, (_reply, all) => saveTranscript(all))}
+        disabled={streaming}
+      />
     </div>
   );
 }

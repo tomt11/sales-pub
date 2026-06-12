@@ -45,12 +45,7 @@ export function applyRating(
   };
 }
 
-/** Pull a review forward so it surfaces in the next drill session. */
-export function pullForward(state: Record<string, unknown>): { due: string } {
-  return { due: new Date().toISOString() };
-}
-
-export function scoreToRating(score: number): FsrsRating {
+/** Map a 1-4 score to an FSRS rating. */export function scoreToRating(score: number): FsrsRating {
   if (score <= 1) return "again";
   if (score === 2) return "hard";
   if (score === 3) return "good";

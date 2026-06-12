@@ -195,6 +195,10 @@ Input: Tom's voice/text debrief notes.
 5. Suggest the next touch (glue-based where possible)
 Also: ask yourself what surfaced in unguarded moments (black swans) and capture it in
 the personal details.
+6. If the meeting produced a reusable, DE-IDENTIFIED social-proof story (a client
+   situation + what was done + the result, with no names), capture it as case_story
+   with region/commodity/scale — similarity is the active ingredient of social proof.
+   Otherwise set case_story to null.
 
 Output JSON only:
 {"technique_score": 1-4, "technique_feedback": "...",
@@ -202,7 +206,8 @@ Output JSON only:
  "new_personal_details": {"key": "value"},
  "implied_or_explicit_needs": ["..."],
  "reflection_question": "...",
- "next_touch_suggestion": "..."}`;
+ "next_touch_suggestion": "...",
+ "case_story": {"region": "...", "commodity": "...", "scale": "...", "story": "..."} | null}`;
 }
 
 export function remixPrompt(opts: { personaSheet: unknown }): string {
@@ -224,6 +229,7 @@ export function coachPrompt(opts: {
   dueCount: number;
   weakConcepts: string[];
   oneThing: string | null;
+  overdueContacts: string[];
 }): string {
   return `You are Tom's VOICE sales coach — replies are spoken aloud by text-to-speech, so:
 - Keep every reply under 80 words unless he asks for depth. No markdown, no bullet
@@ -238,6 +244,10 @@ ${opts.playbookExcerpts}
 Live training state: ${opts.dueCount} drills due; weakest concepts: ${
     opts.weakConcepts.join(", ") || "none yet"
   }; latest "one thing" from his last graded roleplay: ${opts.oneThing ?? "none yet"}.
+Network state — contacts overdue for a touch: ${
+    opts.overdueContacts.join("; ") || "none"
+  }. If he asks who to call or what to do today, use this list and suggest a
+glue-based touch-without-ask before any business ask.
 
 What you do well by voice: rehearse lines aloud (mirrors, labels, calibrated questions,
 implication questions — delivery matters, not just wording), quiz him conversationally

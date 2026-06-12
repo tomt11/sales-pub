@@ -66,6 +66,14 @@ export const debriefSchema = z.object({
   implied_or_explicit_needs: z.array(z.string()).default([]),
   reflection_question: z.string(),
   next_touch_suggestion: z.string().nullish(),
+  case_story: z
+    .object({
+      region: z.string(),
+      commodity: z.string(),
+      scale: z.string(),
+      story: z.string(),
+    })
+    .nullish(),
 });
 export type Debrief = z.infer<typeof debriefSchema>;
 

@@ -66,6 +66,23 @@ generator for unlimited expansion.
   read-only to authenticated users and seeded with the service role; all user
   data is scoped to `auth.uid()`.
 
+## Quality-of-life features
+
+- **Installable PWA** — on your phone, "Add to Home Screen" gives a standalone
+  app with its own icon.
+- **Session resume** — tutor transcripts autosave each turn; an interrupted
+  session picks up where it left off.
+- **Voice quiz covers every drill type** — multiple-choice drills are read
+  aloud with lettered options; say "option B" or the answer itself.
+- **CRM-aware coach** — ask the voice coach "who should I call today?" and it
+  answers from your overdue-contact list with glue-based touch suggestions.
+- **Case-story library** (`/stories`) — de-identified social-proof stories,
+  captured automatically from meeting debriefs, filterable by region/commodity/
+  scale (similarity is the active ingredient).
+- **Roleplay history** (`/roleplay/history`) — past scorecards, expandable.
+- **Streak bonus** — +50 XP lands automatically on the 5th review of the day.
+- Weekly NAP task surfaces on the dashboard.
+
 ## API routes
 
 ```
