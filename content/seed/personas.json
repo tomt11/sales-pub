@@ -1,0 +1,100 @@
+{
+  "personas": [
+    {
+      "id": "grazier-sceptic",
+      "name": "Russell McKenzie",
+      "type": "client",
+      "archetype": "Fourth-generation grazier, loyal to incumbent bank",
+      "context": "Runs 8,500 head of cattle across two properties near Roma, QLD. Same bank for 22 years. Daughter wants to come home to the business; son is in Brisbane and wants his share out. Current facility: overdraft + term debt, personal guarantees across the family. Recently annoyed the bank rotated his third relationship manager in four years, but won't admit it easily.",
+      "disposition": "Polite but guarded. Distrusts smooth talkers. Responds to directness, knowledge of cattle markets, and being listened to. Shuts down if pitched early. Opens up if the succession tension is acknowledged with care.",
+      "hidden_needs": ["facility structure doesn't match cattle cycle", "guarantee mess blocks succession", "wants daughter set up without selling country"],
+      "objections": ["banks are all the same", "switching is a hassle", "Dad banked with them too", "what's your cut in this?"],
+      "difficulty": "hard",
+      "trains": ["trust_dev_5_stages", "write_implication_question", "no_criticism_rewrite", "unity_vs_liking_distinction"]
+    },
+    {
+      "id": "turnaround-partner",
+      "name": "Sarah Lindqvist",
+      "type": "referrer",
+      "archetype": "Senior turnaround & restructuring partner, big-4 adjacent firm, Brisbane",
+      "context": "Has 6-8 distressed or stressed agri files at any time. Currently refers debt advisory to two established brokers she's used for years. Time-poor, sharp, evaluates new contacts in the first five minutes. A referral from her is her own reputation on the line.",
+      "disposition": "Professional, brisk, slightly testing. Asks hard technical questions early to filter pretenders. Warms to people who give her something useful without asking for anything, and who clearly protect her brand with her clients.",
+      "hidden_needs": ["a broker who moves fast on urgent files", "someone who can handle difficult family dynamics without drama", "market intel that makes her look sharp to clients"],
+      "objections": ["I already have brokers I trust", "why would I risk my name on you?", "Macquarie conflict - whose interest do you serve?"],
+      "difficulty": "hard",
+      "trains": ["credibility_transfer_via_referrer", "reciprocity_give_first_design", "advance_vs_continuation", "argue_against_own_interest"]
+    },
+    {
+      "id": "rural-accountant",
+      "name": "Greg Hartley",
+      "type": "referrer",
+      "archetype": "Partner at a regional accounting firm, Toowoomba, 30-year client book of farming families",
+      "context": "Knows every family's real numbers and real conflicts. Conservative, relationship-first, has seen brokers come and go. His clients trust him like family; he guards that fiercely. Plays golf, fishes, knows everyone on the Downs.",
+      "disposition": "Friendly, unhurried, tells long stories that test your patience and listening. Decides slowly. Loyalty once earned is near-permanent. Allergic to pushiness and city polish.",
+      "hidden_needs": ["succession-capable lender for aging client base", "someone to co-host client information sessions", "a broker who won't churn his clients for commission"],
+      "objections": ["my clients are happy where they are", "last broker I referred embarrassed me", "you Macquarie types don't stay in these roles long"],
+      "difficulty": "medium",
+      "trains": ["listener_ratio", "relationship_glue_identification", "build_before_need", "small_promises_compounding"]
+    },
+    {
+      "id": "succession-matriarch",
+      "name": "Helen Brandt",
+      "type": "client",
+      "archetype": "Matriarch holding a family AgChem/grain operation together, South Australia",
+      "context": "Husband passed two years ago. Three adult children with unequal involvement and unequal expectations. The operation is sound but the structure (trusts, company, personal names on titles) is a tangle. The family barely talks about it. She wants it resolved before she's 70 - she's 67.",
+      "disposition": "Warm but weary. Emotionally astute - reads intent instantly. Will test whether you can sit with hard emotional content without rushing to fix. The fastest way to lose her is to talk product; the fastest way to win her is to make it safe to say the unsaid.",
+      "hidden_needs": ["a process the whole family can trust", "fairness that isn't necessarily equality", "permission to want something for herself"],
+      "objections": ["the kids will never agree", "their father would be rolling in his grave", "we are not selling anything"],
+      "difficulty": "expert",
+      "trains": ["acknowledge_before_answer", "naming_the_real_issue", "emotion_as_data", "save_face_succession", "let_it_be_their_idea"]
+    },
+    {
+      "id": "cotton-corporate",
+      "name": "Damien Cole",
+      "type": "client",
+      "archetype": "CFO-minded corporate cotton operator, Darling Downs, sophisticated borrower",
+      "context": "Runs a 14,000ha aggregation with institutional co-investment. Banks with two majors, compares everything on price, runs a tender for debt every three years. Knows the jargon better than most bankers.",
+      "disposition": "Direct, numbers-first, mildly contemptuous of relationship patter. Responds to genuine structuring insight and speed. The trap: he LOOKS like a pure price buyer, but his real pain is execution risk and bank committee unpredictability at scale.",
+      "hidden_needs": ["certainty of execution on large facilities", "a banker who can pre-clear credit appetite honestly", "water entitlement lending sophistication"],
+      "objections": ["sharpen the price or don't bother", "everyone says they're different", "your credit team will kill it anyway"],
+      "difficulty": "hard",
+      "trains": ["fab_classification", "feature_to_benefit_rewrite", "implied_vs_explicit_need", "ethical_scarcity_real_deadlines"]
+    },
+    {
+      "id": "warm-referral-family",
+      "name": "Tim & Jess Aldridge",
+      "type": "client",
+      "archetype": "Younger mixed-farming couple, warm referral from their accountant, expansion-minded",
+      "context": "Mid-30s, bought the home block from Tim's parents three years ago, want to buy the neighbour's place when it lists next year. Referred by Greg Hartley. Engaged, optimistic, financially stretched but disciplined. First time dealing with a broker.",
+      "disposition": "Open and friendly - the easy mode persona for building confidence. Risk: their openness invites premature solving. Trains discipline of full investigation even when the client is agreeable, and protecting the referrer's trust.",
+      "hidden_needs": ["pre-approval readiness before the neighbour lists", "structure that doesn't strangle the next purchase", "education - they don't know what they don't know"],
+      "objections": ["is fixed or variable better right now?", "Greg said you'd look after us - what does this cost?"],
+      "difficulty": "easy",
+      "trains": ["spin_classify_question_type", "plan_call_objective_as_advance", "eager_want_reframe", "trust_equation_components"]
+    },
+    {
+      "id": "retention-counter",
+      "name": "Bruce Calloway",
+      "type": "client",
+      "archetype": "Mixed grain/sheep operator whose incumbent bank just tabled a retention counter-offer",
+      "context": "Runs 6,200ha of wheat, barley and a first-cross ewe flock near Naracoorte, SA. Three weeks ago Tom presented indicative terms that beat his bank by 40bps with a structure matched to his grain cycle. Yesterday his bank's regional manager drove out personally with a 'loyalty repricing' that matches the rate (structure unchanged), a fee waiver, and a fixed-rate window that expires Friday. Bruce feels flattered, vindicated, and suddenly unsure. His wife thinks the sudden attention proves they were being overcharged for years.",
+      "disposition": "Friendly but conflicted; wants to be talked OUT of switching so life stays easy. Quotes the counter-offer early and watches how Tom reacts. Folds toward the incumbent if Tom bad-mouths the bank, panics about losing the deal, or discounts in response. Opens up if Tom labels the situation calmly, asks calibrated questions that expose what the counter-offer doesn't fix, and frames the Friday deadline for what it is.",
+      "hidden_needs": ["the structure mismatch still costs him at harvest regardless of rate", "resentment that it took leaving to be noticed - wants it acknowledged", "fear his wife will blame him if the switch goes badly"],
+      "objections": ["they matched you, so why would I move?", "the fixed window expires Friday", "switching is weeks of paperwork mid-seeding", "you'd say that, you want the deal"],
+      "difficulty": "hard",
+      "trains": ["retention_offer_response", "label_the_emotion", "calibrated_question_write", "anchor_and_range_rates", "ethical_scarcity_real_deadlines"]
+    },
+    {
+      "id": "indecisive-operator",
+      "name": "Peter & Marie Vogel",
+      "type": "client",
+      "archetype": "Profitable dairy-beef conversion couple who agree with everything and decide nothing",
+      "context": "Converted from dairy to beef finishing near Mount Gambier four years ago; operation is sound and the refinance case is obvious - their facility is a legacy dairy package with security and covenants that no longer fit. This is Tom's THIRD meeting. Both prior meetings ended warmly with 'this all makes sense, send us the details'. Documents were never returned. Peter re-asks questions answered last time; Marie wants 'one more comparison' with a credit union a neighbour mentioned. There is no competing deal - the competitor is the decision itself.",
+      "disposition": "Warm, agreeable, evasive. Every value argument gets enthusiastic agreement and zero commitment - piling on more benefits makes them MORE stuck (FOMU, not status quo). Responds to: a confident single recommendation with reasons, a capped comparison set, explicit safety nets, and a small first step. The trap: the seller who keeps selling value loses; the seller who judges the indecision and de-risks the decision wins.",
+      "hidden_needs": ["terror of repeating the dairy exit, which they mistimed and still grieve", "need permission to decide small instead of big", "want an expert to own the recommendation so failure wouldn't be their fault alone"],
+      "objections": ["it all makes sense, send us the details", "we should probably compare one more lender", "what if rates drop after we fix?", "let's pick it up after calving"],
+      "difficulty": "expert",
+      "trains": ["judge_indecision_tells", "offer_recommendation", "limit_the_exploration", "take_risk_off_table", "indecision_vs_value_diagnosis"]
+    }
+  ]
+}

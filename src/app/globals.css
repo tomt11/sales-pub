@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-ink-950 text-slate-200 antialiased;
+}
+
+.chat-bubble-user {
+  @apply ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-flame-600/90 px-4 py-2.5 text-sm text-white;
+}
+
+.chat-bubble-ai {
+  @apply mr-auto max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-bl-sm bg-ink-800 px-4 py-2.5 text-sm text-slate-100;
+}
+
+.prose-playbook {
+  @apply text-sm leading-relaxed text-slate-300;
+}
+.prose-playbook h1 {
+  @apply mb-3 mt-6 text-xl font-bold text-slate-100;
+}
+.prose-playbook h2 {
+  @apply mb-2 mt-6 text-lg font-semibold text-flame-400;
+}
+.prose-playbook h3 {
+  @apply mb-2 mt-4 text-base font-semibold text-slate-200;
+}
+.prose-playbook p {
+  @apply mb-3;
+}
+.prose-playbook ul,
+.prose-playbook ol {
+  @apply mb-3 ml-5 list-disc space-y-1;
+}
+.prose-playbook ol {
+  @apply list-decimal;
+}
+.prose-playbook strong {
+  @apply font-semibold text-slate-100;
+}
+.prose-playbook em {
+  @apply text-slate-400;
+}
+.prose-playbook blockquote {
+  @apply mb-3 border-l-2 border-gold/60 pl-3 text-slate-400;
+}
+.prose-playbook code {
+  @apply rounded bg-ink-800 px-1 py-0.5 text-xs text-gold;
+}
+.prose-playbook hr {
+  @apply my-5 border-ink-700;
+}
+.prose-playbook table {
+  @apply mb-3 w-full text-left text-xs;
+}
+.prose-playbook th,
+.prose-playbook td {
+  @apply border border-ink-700 px-2 py-1;
+}
